@@ -11,7 +11,10 @@ type Handler struct {
 	getItemsWithPriceUseCase *usecase.GetItemsWithPriceUseCase
 }
 
-func NewHandler(getItemsWithPriceUseCase *usecase.GetItemsWithPriceUseCase) *Handler {
+func NewHandler(
+	getItemsWithPriceUseCase *usecase.GetItemsWithPriceUseCase,
+
+) *Handler {
 	return &Handler{
 		getItemsWithPriceUseCase: getItemsWithPriceUseCase,
 	}
