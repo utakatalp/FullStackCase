@@ -23,8 +23,14 @@ func main() {
 		GetItemsUseCase:       getItemsUseCase,
 		CalculatePriceUseCase: calculatePriceUseCase,
 	}
+	filterByPopularityUseCase := &usecase.FilterByPopularityUseCase{
+		GetItemsWithPriceUseCase: getItemsWithPriceUseCase,
+	}
+	filterByPriceRangeUseCase := &usecase.FilterByPriceRangeUseCase{
+		GetItemsWithPriceUseCase: getItemsWithPriceUseCase,
+	}
 
-	handler := httpDelivery.NewHandler(getItemsWithPriceUseCase)
+	handler := httpDelivery.NewHandler(getItemsWithPriceUseCase, filterByPriceRangeUseCase, filterByPopularityUseCase)
 	router := httpDelivery.NewRouter(handler)
 
 	log.Println("Server running on :8080")

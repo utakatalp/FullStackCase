@@ -13,7 +13,7 @@ func (usecase *FilterByPriceRangeUseCase) Execute(minPrice float64, maxPrice flo
 	}
 	var filteredItems []entity.ItemWithPrice
 	for i := range items {
-		if items[i].Price >= minPrice && items[i].Price >= maxPrice {
+		if items[i].Price >= minPrice && items[i].Price <= maxPrice {
 			filteredItems = append(filteredItems, items[i])
 		}
 	}
