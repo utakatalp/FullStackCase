@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/utakatalp/FullStackCase/internal/infrastructure/config"
 	"github.com/utakatalp/FullStackCase/internal/infrastructure/external"
 	"github.com/utakatalp/FullStackCase/internal/infrastructure/persistence"
 	httpDelivery "github.com/utakatalp/FullStackCase/internal/interface/http"
@@ -10,9 +11,10 @@ import (
 )
 
 func main() {
-	itemRepo := persistence.NewJSONItemRepository("products.json")
-	goldPriceProvider := external.NewGoldAPIProvider("https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD")
-	// mock := external.NewMockGoldAPIProvider()
+	cfg := config.Load()
+
+	itemRepo := persistence.NewJSONItemRepository(cfg.JSONFilePath)
+	goldPriceProvider := external.NewGoldAPIProvider(cfg.GoldAPIURL)
 
 	getItemsUseCase := &usecase.GetItemsUseCase{Repo: itemRepo}
 	calculatePriceUseCase := &usecase.CalculatePriceUseCase{
@@ -33,7 +35,7 @@ func main() {
 	handler := httpDelivery.NewHandler(getItemsWithPriceUseCase, filterByPriceRangeUseCase, filterByPopularityUseCase)
 	router := httpDelivery.NewRouter(handler)
 
-	log.Println("Server running on :8080")
-	router.Run(":8080")
+	log.Println("Server running on ", cfg.ServerPort)
+	router.Run(cfg.ServerPort)
 
 }
