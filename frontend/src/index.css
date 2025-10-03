@@ -1,0 +1,43 @@
+@import "./styles/fonts.css";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.ant-carousel .slick-prev,
+.ant-carousel .slick-next {
+  color: #000000 !important; /* active arrow color */
+}
+
+.ant-carousel .slick-prev {
+  left: -40px;
+}
+
+.ant-carousel .slick-next {
+  right: -40px;
+}
+
+.ant-carousel .slick-prev::after,
+.ant-carousel .slick-next::after {
+  border-color: currentColor;
+}
+
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover {
+  color: #160202 !important;
+}
+
+.ant-carousel .slick-prev.slick-disabled,
+.ant-carousel .slick-next.slick-disabled {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+

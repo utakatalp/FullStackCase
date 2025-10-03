@@ -2,6 +2,7 @@ package http
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -46,12 +47,12 @@ func (handler *Handler) FilterByPopularityUseCase(context *gin.Context) {
 }
 func (handler *Handler) FilterByPriceRangeUseCase(context *gin.Context) {
 
-	maxPrice, err := parseQueryFloat(context, "max_price")
+	maxPrice, err := parseQueryFloat(context, "max")
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid max_price parameter"})
 		return
 	}
-	minPrice, err := parseQueryFloat(context, "min_price")
+	minPrice, err := parseQueryFloat(context, "min")
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid min_price parameter"})
 		return
@@ -62,6 +63,10 @@ func (handler *Handler) FilterByPriceRangeUseCase(context *gin.Context) {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].Price < items[j].Price
+	})
+
 	context.JSON(http.StatusOK, items)
 }
 
