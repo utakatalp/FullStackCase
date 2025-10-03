@@ -1,25 +1,12 @@
-import React, { useReducer, useEffect } from "react";
-import { reducer, initialState, ACTIONS } from "../../app/store";
-import { itemsRepository } from "../../data/repository/itemsRepository.js";
-import { Carousel } from 'antd';
+import React from "react";
+import { Card, Carousel, Skeleton } from "antd";
 import CatalogCard from "./CatalogCard";
-import { Skeleton } from 'antd';
-import { Card } from "antd";
 
-const contentStyle = {
-  margin: 0,
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-  background: '#364d79',
-};
+const SKELETON_CARD_COUNT = 4;
 
 
-function CatalogView({state, dispatch}) {
-  
-  console.log("Current state:", state);
 
+function CatalogView({ loading, error, items, selectedColors, dispatch }) {
   return (
     <div
       style={{
@@ -30,36 +17,16 @@ function CatalogView({state, dispatch}) {
         marginBottom: 30,
       }}
     >
+      {loading && renderLoadingSkeleton()}
+      {error && renderErrorState()}
 
-      {state.loading && <div style={{ display: "flex", justifyContent: "center", gap: 24 }}>
-        {[0, 1, 2, 3].map((key) => (
-          <Card key={key} style={{ width: 280 }}>
-            <Skeleton.Image active style={{ width: 240, height: 260, objectFit: "contain" }} />
-            <Skeleton active paragraph={{ rows: 2 }} title={false} />
-          </Card>
-          
-        ))}
-      </div>}
-      {state.error && (
-        <div
-          style={{
-            width: 240,
-            height: 385,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-          }}
+      {items?.length > 0 && (
+        <Carousel
+          arrows={true}
+          infinite={false}
+          style={{ maxWidth: "1200px", margin: "0 auto", color: "black" }}
         >
-          <span className="text-red-500">Products haven't found.</span>
-        </div>
-      )}
-
-
-      {state.items?.length > 0 && (
-        <Carousel arrows = {true} infinite={false} style={{ maxWidth: '1200px', margin: '0 auto' ,color:'black'}}>
-          {Array.from({ length: Math.ceil(state.items.length/4) }).map((_, idx) => (
+          {Array.from({ length: Math.ceil(items.length / 4) }).map((_, idx) => (
             <div key={idx}>
               <div
                 style={{
@@ -69,11 +36,11 @@ function CatalogView({state, dispatch}) {
                   padding: "0 16px",
                 }}
               >
-                {state.items.slice(idx*4 , idx * 4 + 4 ).map((item) => (
+                {items.slice(idx * 4, idx * 4 + 4).map((item) => (
                   <CatalogCard
                     key={item.name}
                     item={item}
-                    selectedColor={state.selectedColors[item.name]}
+                    selectedColor={selectedColors[item.name]}
                     dispatch={dispatch}
                   />
                 ))}
@@ -87,3 +54,37 @@ function CatalogView({state, dispatch}) {
 }
 
 export default CatalogView;
+
+function renderLoadingSkeleton() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", gap: 24 }}>
+      {Array.from({ length: SKELETON_CARD_COUNT }).map((_, key) => (
+        <Card key={key} style={{ width: 280 }}>
+          <Skeleton.Image
+            active
+            style={{ width: 240, height: 260, objectFit: "contain" }}
+          />
+          <Skeleton active paragraph={{ rows: 2 }} title={false} />
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function renderErrorState() {
+  return (
+    <div
+      style={{
+        width: 240,
+        height: 385,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
+      <span className="text-red-500">Products haven't found.</span>
+    </div>
+  );
+}
