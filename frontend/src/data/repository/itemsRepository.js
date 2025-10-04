@@ -1,4 +1,4 @@
-const BASE_URL = "https://fullstackcase-production.up.railway.app/items";
+const BASE_URL = "https://fullstackcase-production.up.railway.app";
 
 export const itemsRepository = {
   
