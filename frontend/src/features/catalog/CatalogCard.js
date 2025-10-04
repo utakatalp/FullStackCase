@@ -17,7 +17,7 @@ function CatalogCard({ item, selectedColor, dispatch }) {
     
     
       <Card
-        style={{ width: 280, borderRadius: 20}}
+        style={{ width: "100%", maxWidth: 280, borderRadius: 20}}
         styles={{ body: { padding: 0 } }}
       >
         <img

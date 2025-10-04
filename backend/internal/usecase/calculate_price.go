@@ -1,6 +1,9 @@
 package usecase
 
 import (
+	"errors"
+	"time"
+
 	"github.com/utakatalp/FullStackCase/internal/domain"
 	"github.com/utakatalp/FullStackCase/internal/domain/entity"
 	"github.com/utakatalp/FullStackCase/internal/domain/service"
@@ -22,19 +25,39 @@ var (
 	cacheValid bool
 ) // A timestamp could avoid continuous API calls, but I left it out so the prices stay obviously dynamic.
 
+type result struct {
+	bid float64
+	ask float64
+	err error
+}
+
 func (usecase *CalculatePriceUseCase) Execute(item entity.Item) (float64, error) {
-	bid, ask, err := usecase.Gold.GetCurrentGoldPrice()
-	if err != nil {
-		if !cacheValid {
-			return 0, err
+
+	ch := make(chan result, 1)
+
+	go func() {
+		bid, ask, err := usecase.Gold.GetCurrentGoldPrice()
+		ch <- result{bid: bid, ask: ask, err: err}
+	}()
+
+	select {
+	case res := <-ch:
+		if res.err != nil {
+			if !cacheValid {
+				return 0, res.err
+			}
+			return service.CalculatePrice(item, service.MidPrice(cachedBid, cachedAsk)), nil
 		}
-		bid = cachedBid
-		ask = cachedAsk
-	} else {
-		cachedBid = bid
-		cachedAsk = ask
+		cachedBid = res.bid
+		cachedAsk = res.ask
 		cacheValid = true
+		return service.CalculatePrice(item, service.MidPrice(res.bid, res.ask)), nil
+
+	case <-time.After(5 * time.Second):
+		if !cacheValid {
+			return 0, errors.New("gold price request timed out and no cache available")
+		}
+		return service.CalculatePrice(item, service.MidPrice(cachedBid, cachedAsk)), nil
 	}
 
-	return service.CalculatePrice(item, service.MidPrice(bid, ask)), nil
 }
