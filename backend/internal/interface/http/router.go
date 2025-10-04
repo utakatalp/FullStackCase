@@ -6,6 +6,7 @@ import (
 )
 
 func NewRouter(handler *Handler) *gin.Engine {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(cors.Default())
 	router.GET("/items", handler.GetItemsWithPrice)
