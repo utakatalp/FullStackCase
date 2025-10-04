@@ -1,4 +1,4 @@
-package usecase
+package tests
 
 import (
 	"errors"
@@ -6,20 +6,8 @@ import (
 
 	"github.com/utakatalp/FullStackCase/internal/domain/entity"
 	"github.com/utakatalp/FullStackCase/internal/domain/service"
+	"github.com/utakatalp/FullStackCase/internal/usecase"
 )
-
-type fakeItemRepository struct {
-	item *entity.Item
-	err  error
-}
-
-func (repo fakeItemRepository) GetAllItems() ([]entity.Item, error) {
-	return nil, nil
-}
-
-func (repo fakeItemRepository) GetItemByName(name string) (*entity.Item, error) {
-	return repo.item, repo.err
-}
 
 type fakeGoldPriceProvider struct {
 	bid float64
@@ -43,9 +31,8 @@ func (provider fakeGoldPriceProvider) GetGoldPrice() (float64, float64, error) {
 
 func TestCalculatePriceUseCaseSuccess(t *testing.T) {
 
-	repo := fakeItemRepository{item: item}
 	gold := fakeGoldPriceProvider{bid: 14, ask: 16}
-	usecase := CalculatePriceUseCase{Repo: repo, Gold: gold}
+	usecase := usecase.CalculatePriceUseCase{Gold: gold}
 
 	price, err := usecase.Execute(*item)
 	if err != nil {
@@ -58,25 +45,10 @@ func TestCalculatePriceUseCaseSuccess(t *testing.T) {
 	}
 }
 
-func TestCalculatePriceUseCaseRepoError(t *testing.T) {
-	repo := fakeItemRepository{err: errors.New("repo error")}
-	gold := fakeGoldPriceProvider{}
-	usecase := CalculatePriceUseCase{Repo: repo, Gold: gold}
-
-	price, err := usecase.Execute(*item)
-	if err == nil {
-		t.Fatal("expected error, got nil")
-	}
-	if price != 0 {
-		t.Fatalf("expected price 0, got %f", price)
-	}
-}
-
 func TestCalculatePriceUseCaseGoldError(t *testing.T) {
 	item := &entity.Item{Name: "test"}
-	repo := fakeItemRepository{item: item}
 	gold := fakeGoldPriceProvider{err: errors.New("gold error")}
-	usecase := CalculatePriceUseCase{Repo: repo, Gold: gold}
+	usecase := usecase.CalculatePriceUseCase{Gold: gold}
 
 	price, err := usecase.Execute(*item)
 	if err == nil {

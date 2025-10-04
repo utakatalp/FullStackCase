@@ -18,7 +18,6 @@ func main() {
 
 	getItemsUseCase := &usecase.GetItemsUseCase{Repo: itemRepo}
 	calculatePriceUseCase := &usecase.CalculatePriceUseCase{
-		Repo: itemRepo,
 		Gold: goldPriceProvider,
 	}
 	getItemsWithPriceUseCase := &usecase.GetItemsWithPriceUseCase{

@@ -7,7 +7,6 @@ import (
 )
 
 type CalculatePriceUseCase struct {
-	Repo domain.ItemRepository
 	Gold domain.GoldPriceProvider
 }
 
