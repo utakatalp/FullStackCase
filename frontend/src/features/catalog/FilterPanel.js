@@ -34,7 +34,7 @@ function FilterPanel({
         Sort By Popularity
       </Button>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, width: "60%" }}>
         <span>Minimum: {range[0]}</span>
         <Slider
           range

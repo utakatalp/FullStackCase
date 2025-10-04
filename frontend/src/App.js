@@ -1,10 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CatalogView from "./features/catalog/CatalogView";
 import FilterPanel from "./features/catalog/FilterPanel";
 import useCatalogData from "./features/catalog/useCatalogData";
+import CatalogViewForMobile from "./features/catalog/CatalogViewForMobile";
 
 function App() {
   const { state, dispatch, filterByPopularity, filterByPriceRange } = useCatalogData();
+
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div
@@ -19,13 +28,23 @@ function App() {
         Product List
       </h1>
 
-      <CatalogView
-        items={state.items}
-        loading={state.loading}
-        error={state.error}
-        selectedColors={state.selectedColors}
-        dispatch={dispatch}
-      />
+      {isMobile ? (
+        <CatalogViewForMobile
+          items={state.items}
+          loading={state.loading}
+          error={state.error}
+          selectedColors={state.selectedColors}
+          dispatch={dispatch}
+        />
+      ) : (
+        <CatalogView
+          items={state.items}
+          loading={state.loading}
+          error={state.error}
+          selectedColors={state.selectedColors}
+          dispatch={dispatch}
+        />
+      )}
       <FilterPanel
         onFilterByPopularity={filterByPopularity}
         onFilterByPriceRange={filterByPriceRange}
