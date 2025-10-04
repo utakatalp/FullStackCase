@@ -26,17 +26,3 @@ func (repo *JSONItemRepository) GetAllItems() ([]entity.Item, error) {
 	}
 	return items, nil
 }
-
-func (repo *JSONItemRepository) GetItemByName(name string) (*entity.Item, error) {
-	items, err := repo.GetAllItems()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, i := range items {
-		if i.Name == name {
-			return &i, nil
-		}
-	}
-	return nil, nil
-}
