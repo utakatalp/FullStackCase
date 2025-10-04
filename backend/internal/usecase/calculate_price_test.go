@@ -27,21 +27,23 @@ type fakeGoldPriceProvider struct {
 	err error
 }
 
+var item = &entity.Item{
+	Name:            "test",
+	PopularityScore: 2,
+	Weight:          10,
+}
+
 func (provider fakeGoldPriceProvider) GetCurrentGoldPrice() (float64, float64, error) {
 	return provider.bid, provider.ask, provider.err
 }
 
 func TestCalculatePriceUseCaseSuccess(t *testing.T) {
-	item := &entity.Item{
-		Name:            "test",
-		PopularityScore: 2,
-		Weight:          10,
-	}
+
 	repo := fakeItemRepository{item: item}
 	gold := fakeGoldPriceProvider{bid: 14, ask: 16}
 	usecase := CalculatePriceUseCase{Repo: repo, Gold: gold}
 
-	price, err := usecase.Execute("test")
+	price, err := usecase.Execute(*item)
 	if err != nil {
 		t.Fatalf("expected no error, got %v", err)
 	}
@@ -57,7 +59,7 @@ func TestCalculatePriceUseCaseRepoError(t *testing.T) {
 	gold := fakeGoldPriceProvider{}
 	usecase := CalculatePriceUseCase{Repo: repo, Gold: gold}
 
-	price, err := usecase.Execute("test")
+	price, err := usecase.Execute(*item)
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}
@@ -72,7 +74,7 @@ func TestCalculatePriceUseCaseGoldError(t *testing.T) {
 	gold := fakeGoldPriceProvider{err: errors.New("gold error")}
 	usecase := CalculatePriceUseCase{Repo: repo, Gold: gold}
 
-	price, err := usecase.Execute("test")
+	price, err := usecase.Execute(*item)
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}

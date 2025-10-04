@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"github.com/utakatalp/FullStackCase/internal/domain"
+	"github.com/utakatalp/FullStackCase/internal/domain/entity"
 	"github.com/utakatalp/FullStackCase/internal/domain/service"
 )
 
@@ -15,16 +16,25 @@ type GoldPrice struct {
 	Ask float64
 }
 
-func (usecase *CalculatePriceUseCase) Execute(itemName string) (float64, error) {
-	item, err := usecase.Repo.GetItemByName(itemName)
-	if err != nil {
-		return 0, err
-	}
+var (
+	cachedBid  float64
+	cachedAsk  float64
+	cacheValid bool
+) // A timestamp could avoid continuous API calls, but I left it out so the prices stay obviously dynamic.
 
+func (usecase *CalculatePriceUseCase) Execute(item entity.Item) (float64, error) {
 	bid, ask, err := usecase.Gold.GetCurrentGoldPrice()
 	if err != nil {
-		return 0, err
+		if !cacheValid {
+			return 0, err
+		}
+		bid = cachedBid
+		ask = cachedAsk
+	} else {
+		cachedBid = bid
+		cachedAsk = ask
+		cacheValid = true
 	}
 
-	return service.CalculatePrice(*item, service.MidPrice(bid, ask)), nil
+	return service.CalculatePrice(item, service.MidPrice(bid, ask)), nil
 }

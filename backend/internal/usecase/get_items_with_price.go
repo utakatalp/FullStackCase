@@ -15,7 +15,7 @@ func (usecase *GetItemsWithPriceUseCase) Execute() ([]entity.ItemWithPrice, erro
 
 	itemsWithPrice := make([]entity.ItemWithPrice, 0, len(items))
 	for i := range items {
-		price, err := usecase.CalculatePriceUseCase.Execute(items[i].Name)
+		price, err := usecase.CalculatePriceUseCase.Execute(items[i])
 		if err != nil {
 			return nil, err
 		}
