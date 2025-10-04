@@ -51,6 +51,7 @@ func (usecase *CalculatePriceUseCase) Execute(item entity.Item) (float64, error)
 		println("before 5s")
 		cachedBid = res.bid
 		cachedAsk = res.ask
+		println(res.bid)
 		cacheValid = true
 		return service.CalculatePrice(item, service.MidPrice(res.bid, res.ask)), nil
 
