@@ -2,6 +2,8 @@
 
 FullStackCase is a small full-stack application that showcases a jewellery catalogue. It combines a React (Create React App) frontend with a Go (Gin) backend that enriches each item with a live gold price pulled from an external API.
 
+> Want to see it in action? Visit the live deployment: [full-stack-case-alp.vercel.app](https://full-stack-case-alp.vercel.app)
+
 ---
 
 ## Highlights
@@ -134,4 +136,3 @@ The gold price adapter caches bid/ask pairs for 5 seconds. Tests can reset the c
 ## License
 
 This project is provided as-is for demonstration purposes. Feel free to fork and adapt it to your needs.
-
