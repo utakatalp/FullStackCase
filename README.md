@@ -116,23 +116,5 @@ The gold price adapter caches bid/ask pairs for 5 seconds. Tests can reset the c
 
 ---
 
-## Deployment Notes
 
-- **Frontend on Vercel**: set the project root to `frontend`, build command `npm run build`, output `build/`.
-- **Backend**: either use Vercel’s Go runtime with root `backend` (expose handler as serverless function) or deploy to a dedicated service (Render, Railway) and point the frontend `BASE_URL` there.
-- Configure environment variables (e.g. `REACT_APP_API_URL`) so the frontend knows which backend to talk to.
 
----
-
-## Roadmap Ideas
-
-- Persist gold price cache with a proper TTL strategy or distributed store.
-- Improve mobile responsiveness by adjusting carousel layout and card sizing.
-- Add authentication and user-specific wishlists/favourites.
-- Increase test coverage for timeout and cache fallback behaviour using time mocking or table-driven tests.
-
----
-
-## License
-
-This project is provided as-is for demonstration purposes. Feel free to fork and adapt it to your needs.
