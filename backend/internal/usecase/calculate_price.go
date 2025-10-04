@@ -48,15 +48,18 @@ func (usecase *CalculatePriceUseCase) Execute(item entity.Item) (float64, error)
 			}
 			return service.CalculatePrice(item, service.MidPrice(cachedBid, cachedAsk)), nil
 		}
+		println("before 5s")
 		cachedBid = res.bid
 		cachedAsk = res.ask
 		cacheValid = true
 		return service.CalculatePrice(item, service.MidPrice(res.bid, res.ask)), nil
 
-	case <-time.After(5 * time.Second):
+	case <-time.After(5 * time.Second): // if the request takes more than 5 seconds, cached data will be used.
 		if !cacheValid {
 			return 0, errors.New("gold price request timed out and no cache available")
 		}
+		println("after 5s")
+
 		return service.CalculatePrice(item, service.MidPrice(cachedBid, cachedAsk)), nil
 	}
 
