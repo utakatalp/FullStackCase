@@ -37,6 +37,10 @@ func (provider fakeGoldPriceProvider) GetCurrentGoldPrice() (float64, float64, e
 	return provider.bid, provider.ask, provider.err
 }
 
+func (provider fakeGoldPriceProvider) GetGoldPrice() (float64, float64, error) {
+	return provider.bid, provider.ask, provider.err
+}
+
 func TestCalculatePriceUseCaseSuccess(t *testing.T) {
 
 	repo := fakeItemRepository{item: item}

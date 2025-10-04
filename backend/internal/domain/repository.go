@@ -8,4 +8,5 @@ type ItemRepository interface {
 
 type GoldPriceProvider interface {
 	GetCurrentGoldPrice() (float64, float64, error)
+	GetGoldPrice() (float64, float64, error)
 }
